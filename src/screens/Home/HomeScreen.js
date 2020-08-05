@@ -3,12 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList } from '
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Restaurants, HairSalon, Gym, Appointments } from '../../components/TempData'
-import Calandar from '../../components/Calandar'
 import FlatListCard from './FlatListCard';
 import AppointmentCard from './AppointmentCard';
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-import HorizantalCalendar from '../../components/HorizantalCalendar'
-
+import Calendar from '../../components/Calendar';
 
 const HomeScreen = (props) => {
     const [Notification, setNotification] = useState(true)
@@ -99,9 +97,7 @@ const HomeScreen = (props) => {
             {/* <View style={{ backgroundColor: '#3ec0f0' }}>
                 <View style={styles.CalanderContainer}>
                     <View style={styles.CalanderinnerDetails}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10, marginTop: 10 }}>
-                            <Text style={{ color: 'white' }}>Today</Text>
-                            <Text style={{ color: 'white' }}>{TodayDate}</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10, marginTop: 3 }}>
                             <MaterialCommunityIcons
                                 name="calendar-month"
                                 color="white"
@@ -111,23 +107,29 @@ const HomeScreen = (props) => {
                         </View>
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 30, backgroundColor: '#3ec0f0' }}>
-
-                    <Text style={{ color: 'white' }}>M</Text>
-                    <Text style={{ color: 'white' }}>T</Text>
-                    <Text style={{ color: 'white' }}>W</Text>
-                    <Text style={{ color: 'white' }}>Th</Text>
-                    <Text style={{ color: 'white' }}>F</Text>
-                    <Text style={{ color: 'white' }}>S</Text>
-                    <Text style={{ color: 'white' }}>Su</Text>
-
-                </View>
-                <View>
-                    <Calandar />
-                </View>
             </View> */}
-            <HorizantalCalendar />
+            
+            <Calendar />
 
+            <View style={{ alignItems: 'flex-start', paddingLeft: 10, }}>
+                <View style={{ marginTop: -90, }}>
+                    <MaterialCommunityIcons
+                        name="calendar-month"
+                        color="white"
+                        size={25}
+                        onPress={showDatePicker}
+                    />
+                </View>
+            </View>
+
+
+            <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                // datePickerModeAndroid={'spinner'}
+                onConfirm={handleDate}
+                onCancel={hideDatePicker}
+            />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, marginHorizontal: 10 }}>
                 <Text style={{ color: 'gray' }}>06-06-2020</Text>
                 <MaterialIcons
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
     },
     CalanderinnerDetails: {
         width: '100%',
-        height: 40,
+        height: 30,
         backgroundColor: '#3ec0f0',
     },
 });
