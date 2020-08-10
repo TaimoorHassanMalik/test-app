@@ -10,6 +10,7 @@ export default class LoadingScreen extends React.Component {
             Animated.timing(this.state.logoOpacity, {
                 toValue: 1,
                 duration: 1500,
+                useNativeDriver: true
             }),
         ]).start(() => {
             this.props.navigation.navigate('Auth')

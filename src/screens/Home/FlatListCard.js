@@ -1,13 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, useWindowDimensions, Platform } from 'react-native';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 
 const FlatListCard = (props) => {
+    const windowWidth = useWindowDimensions().width;
+    const windowHeight = useWindowDimensions().height;
+
     return (
         <View>
-            <View style={[styles.innerDetails, { width: 250, height: 110 }]}>
+            <View style={[styles.innerDetails, { width: windowWidth / 1.5, height: 110 }]}>
                 <View style={styles.item}>
                     <View style={styles.image_container}>
                         <Image
@@ -84,7 +87,21 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'white',
         marginTop: 5,
-        elevation: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.8,
+                shadowRadius: 1,
+            },
+            android: {
+                elevation: 5,
+            },
+            default: {
+                // other platforms, web for example
+                backgroundColor: 'blue'
+            }
+        }),
         marginHorizontal: 10
     },
     item: {

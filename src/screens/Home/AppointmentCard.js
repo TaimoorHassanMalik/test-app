@@ -1,13 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, useWindowDimensions } from 'react-native';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 
+
+
 const AppointmentCard = (props) => {
+    const windowWidth = useWindowDimensions().width;
+    const windowHeight = useWindowDimensions().height;
     return (
         <View>
-            <TouchableOpacity style={styles.innerDetails} onPress={props.ButtonClick}>
+            <TouchableOpacity style={[styles.innerDetails, { width: windowWidth / 1.8 }]} onPress={props.ButtonClick}>
                 <View style={{ height: 100, }}>
                     <Image source={props.Image} style={{ width: '100%', height: '100%', borderRadius: 10 }} />
                     <View style={{ alignItems: 'flex-end', paddingRight: 5, }}>
@@ -93,7 +97,21 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'white',
         marginTop: 5,
-        elevation: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.8,
+                shadowRadius: 1,
+            },
+            android: {
+                elevation: 5,
+            },
+            default: {
+                // other platforms, web for example
+                backgroundColor: 'blue'
+            }
+        }),
         marginHorizontal: 10
     }
 });

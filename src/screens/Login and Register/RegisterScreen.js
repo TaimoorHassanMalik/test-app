@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import Logo from '../../../src/components/Logo';
 import { ScrollView } from 'react-native-gesture-handler';
 import styles from './styles';
@@ -44,7 +44,7 @@ const RegisterScreen = (props) => {
     }
 
     return (
-        <View style={styles.container} >
+        <SafeAreaView style={styles.container} >
             <View style={styles.logoContainer} >
                 <Logo />
             </View>
@@ -71,7 +71,7 @@ const RegisterScreen = (props) => {
                     </TouchableOpacity>
                 </ScrollView>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 export default RegisterScreen;

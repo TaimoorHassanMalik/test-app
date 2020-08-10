@@ -6,6 +6,21 @@ const styles = StyleSheet.create({
         padding: 30,
         backgroundColor: 'white'
     },
+    ContainerPortrait: {
+        flex: 1,
+        flexDirection: 'column',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        backgroundColor: 'white'
+    },
+    ContainerLandscape: {
+        flex: 1,
+        flexDirection: 'row',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        backgroundColor: 'white'
+    },
+
     logoContainer: {
         flex: 0.5,
         alignItems: 'center',
@@ -50,12 +65,15 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingLeft: 10
+        paddingLeft: 10,
+        height: 40,
     },
     input: {
         flex: 1,
+        height: 40,
     },
     textInput: {
+        flex: 1,
         paddingLeft: 10,
         fontSize: 12
     },
