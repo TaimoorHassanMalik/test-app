@@ -3,10 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest",
+    "start:android": "react-native run-android",
+    "start:ios": "react-native run-ios",
+    "start:web": "react-scripts start",
+    "build:web": "react-scripts build",
+    "test:native": "jest",
+    "test:web": "react-scripts test",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -15,6 +18,9 @@
     "@react-native-community/datetimepicker": "^2.6.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/toolbar-android": "0.1.0-rc.2",
+    "@react-navigation/bottom-tabs": "^5.8.0",
+    "@react-navigation/native": "^5.7.3",
+    "@react-navigation/stack": "^5.9.0",
     "loadash": "^1.0.0",
     "moment": "^2.27.0",
     "native-base": "^2.13.12",
@@ -37,10 +43,7 @@
     "react-native-svg": "^12.1.0",
     "react-native-vector-icons": "^7.0.0",
     "react-native-web": "^0.11.7",
-    "react-navigation": "^4.4.0",
-    "react-navigation-drawer": "^2.5.0",
-    "react-navigation-stack": "^2.8.2",
-    "react-navigation-tabs": "^2.9.0",
+    "react-scripts": "3.4.1",
     "styled-components": "^5.1.1"
   },
   "devDependencies": {
@@ -55,5 +58,17 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

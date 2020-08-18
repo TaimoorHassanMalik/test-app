@@ -1,98 +1,107 @@
-import React from 'react';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import Feather from 'react-native-vector-icons/Feather';
-import LoadingScreen from './src/screens/LoadingScreen';
-import LoginScreen from './src/screens/Login and Register/LoginScreen';
-import RegisterScreen from './src/screens/Login and Register/RegisterScreen'
-import VerificationScreen from './src/screens/Login and Register/VerificationScreen'
-import HomeScreen from './src/screens/Home/HomeScreen';
-import AppointmentsDetails from './src/screens/AppointmentsDetails'
-import CheckIn from './src/screens/CheckIn/CheckIn'
-import CheckInThankYou from './src/screens/CheckIn/CheckInQR'
-import SearchScreen from './src/screens/Search/SearchScreen'
-import FavScreen from './src/screens/FavScreen/FavScreen'
-import MoreScreen from './src/screens/MoreScreen/MoreScreen'
+import React, { useEffect, useReducer, useMemo } from 'react'
+import { View, ActivityIndicator } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import MainTabScreen from './screens/Navigation/MainTabScreen'
+import { AuthContext } from './screens/components/context'
+import RootStackScreen from './screens/Navigation/RootStackScreen'
+import AsyncStorage from '@react-native-community/async-storage'
 
-const AppContainer = createBottomTabNavigator(
-  {
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Feather name="home" size={32} color={tintColor} />
-      }
-    },
-    Search: {
-      screen: SearchScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <EvilIcons name="search" size={32} color={tintColor} />
-      }
-    },
-    Heart: {
-      screen: FavScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <EvilIcons name="heart" size={32} color={tintColor} />
-      }
-    },
-    More: {
-      screen: MoreScreen,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => <Feather name="more-horizontal" size={32} color={tintColor} />
-      }
-    }
-  },
-  {
-    navigationOptions: ({ navigation }) => {
-      const { routeName } = navigation.state.routes[navigation.state.index];
-      return {
-        headerShown: false,
-        headerTitle: routeName
-      };
-    },
-    tabBarOptions: {
-      activeTintColor: '#3ec0f0',
-      inactiveTintColor: '#B8BBC4',
-      showLabel: false,
-    },
+const App = () => {
+  const initialLoginState = {
+    isLoading: true,
+    userName: null,
+    userToken: null,
   }
-);
-
-
-const HomeStack = createStackNavigator(
-  {
-    Home: AppContainer,
-    AppointmentsDetails: AppointmentsDetails,
-    CheckIn: CheckIn,
-    CheckInThankYou: CheckInThankYou,
-  },
-  {
-    defaultNavigationOptions: {
-      headerShown: false
-    },
-  }
-);
-
-const AuthStack = createStackNavigator({
-  Login: LoginScreen,
-  Register: RegisterScreen,
-  Verification: VerificationScreen,
-},
-  {
-    defaultNavigationOptions: {
-      headerShown: false
-    },
-  })
-export default createAppContainer(
-  createSwitchNavigator(
-    {
-      Loading: LoadingScreen,
-      App: HomeStack,
-      Auth: AuthStack
-    },
-    {
-      initialRouteName: "Loading"
+  const loginReducer = (prevState, action) => {
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
+        return {
+          ...prevState,
+          userToken: action.token,
+          isLoading: false,
+        }
+      case 'LOGIN':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        }
+      case 'LOGOUT':
+        return {
+          ...prevState,
+          userName: null,
+          userToken: null,
+          isLoading: false,
+        }
+      case 'REGISTER':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        }
     }
+  }
+
+  const [loginState, dispatch] = useReducer(loginReducer, initialLoginState)
+
+  const authContext = useMemo(() => ({
+    signIn: async (foundUser) => {
+      const userToken = String(foundUser[0].userToken)
+      const userName = foundUser[0].username
+
+      try {
+        await AsyncStorage.setItem('userToken', userToken)
+      } catch (e) {
+        console.log(e)
+      }
+      console.log('user token: ', userToken)
+      console.log('Found User: ', foundUser)
+
+      dispatch({ type: 'LOGIN', id: userName, token: userToken })
+    },
+    signOut: async () => {
+
+      try {
+        await AsyncStorage.removeItem('userToken')
+      } catch (e) {
+        console.log(e)
+      }
+      dispatch({ type: 'LOGOUT' })
+    },
+    signUp: () => {
+      //Signup page pending
+    },
+  }), [])
+
+  useEffect(() => {
+    setTimeout(async () => {
+      let userToken
+      userToken = null
+      try {
+        userToken = await AsyncStorage.getItem('userToken')
+      } catch (e) {
+        console.log(e)
+      }
+      // console.log('user token: ', userToken)
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken })
+    }, 1000)
+  }, [])
+
+  if (loginState.isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
+  return (
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        {loginState.userToken !== null ? <MainTabScreen /> : <RootStackScreen />}
+      </NavigationContainer>
+    </AuthContext.Provider>
   )
-);
+}
+export default App
